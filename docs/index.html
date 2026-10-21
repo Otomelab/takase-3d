@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>高瀬さん 3D</title>
+<script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js"></script>
+<style>
+ html,body{margin:0;height:100%;font-family:"Hiragino Sans","Noto Sans JP",sans-serif;background:linear-gradient(160deg,#1b1f2a,#3a2f2a);color:#fff}
+ header{position:fixed;top:0;left:0;right:0;padding:14px 18px;z-index:2;text-align:center}
+ h1{margin:0;font-size:22px;letter-spacing:.1em}
+ header p{margin:4px 0 0;font-size:13px;opacity:.75}
+ model-viewer{width:100%;height:100%;--poster-color:transparent}
+ #ar{position:absolute;left:50%;bottom:28px;transform:translateX(-50%);background:#ff7a2f;color:#fff;border:0;border-radius:999px;padding:14px 26px;font-size:16px;font-weight:700;box-shadow:0 6px 20px rgba(0,0,0,.35)}
+ .bar{position:fixed;right:14px;bottom:96px;display:flex;flex-direction:column;gap:8px;z-index:2}
+ .bar button{background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.3);border-radius:12px;padding:8px 12px;font-size:13px}
+ #msg{position:fixed;left:0;right:0;bottom:90px;text-align:center;font-size:15px;text-shadow:0 2px 6px #000;z-index:2;pointer-events:none}
+ #noar{position:absolute;left:50%;bottom:30px;transform:translateX(-50%);font-size:12px;opacity:.7;display:none}
+</style>
+</head>
+<body>
+<header><h1>高瀬さん 3D</h1><p>ドラッグで回す・ピンチで拡大</p></header>
+<model-viewer id="mv" src="takase.glb" ios-src="takase.usdz" alt="トレーナーの高瀬航さんの3Dモデル"
+  auto-rotate camera-controls ar ar-modes="webxr scene-viewer quick-look" ar-scale="auto"
+  shadow-intensity="1" exposure="1.1" camera-orbit="0deg 80deg auto" touch-action="pan-y">
+  <button slot="ar-button" id="ar">ARで部屋に呼ぶ</button>
+  <div id="noar" slot="">この端末ではARが使えへんみたい</div>
+</model-viewer>
+<div class="bar">
+  <button id="rot">回転ストップ</button>
+  <button id="talk">話しかける</button>
+</div>
+<div id="msg"></div>
+<script>
+const mv=document.getElementById('mv'),msg=document.getElementById('msg');
+const lines=["お疲れさまっす！今日もいい日にしましょう","肩にでっかい重機乗せてんのかい！…って、言われたいっすよね","スクワット、一緒に10回いきます？","水分補給、忘れてないっすか？","キレてる！キレてるっすよ！","無理は禁物っす。でもあと1回だけ！"];
+let i=0,t;
+document.getElementById('talk').onclick=()=>{msg.textContent=lines[i++%lines.length];clearTimeout(t);t=setTimeout(()=>msg.textContent='',3500)};
+const rot=document.getElementById('rot');
+rot.onclick=()=>{mv.autoRotate=!mv.autoRotate;rot.textContent=mv.autoRotate?'回転ストップ':'回転スタート'};
+mv.addEventListener('load',()=>{if(!mv.canActivateAR){document.getElementById('noar').style.display='block'}});
+</script>
+</body>
+</html>
